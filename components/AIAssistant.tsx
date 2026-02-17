@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, X, Scale } from 'lucide-react';
 import { ChatMessage } from '../types';
-import { sendMessageToGemini } from '../services/geminiService';
+// import { sendMessageToGemini } from '../services/geminiService'; // Removed for static version
 
 interface AIAssistantProps {
   isOpen: boolean;
@@ -32,10 +32,12 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ isOpen, onClose }) => 
     setInput('');
     setIsLoading(true);
 
-    const responseText = await sendMessageToGemini(messages, userMsg.text);
-    
-    setMessages(prev => [...prev, { role: 'model', text: responseText }]);
-    setIsLoading(false);
+    // Simulate network delay
+    setTimeout(() => {
+      const responseText = "Obrigado pelo seu contato. Para um atendimento personalizado e análise detalhada do seu caso, por favor, entre em contato diretamente com nossa secretaria através do WhatsApp (11) 99999-9999 ou agende uma consulta pelo nosso site.";
+      setMessages(prev => [...prev, { role: 'model', text: responseText }]);
+      setIsLoading(false);
+    }, 1500);
   };
 
   if (!isOpen) return null;
@@ -43,7 +45,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ isOpen, onClose }) => 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
       <div className="bg-zinc-900 w-full max-w-md h-[600px] rounded-lg shadow-2xl border border-zinc-800 flex flex-col overflow-hidden animate-fade-in-up">
-        
+
         {/* Header */}
         <div className="p-4 border-b border-zinc-800 flex justify-between items-center bg-zinc-950">
           <div className="flex items-center gap-3">
@@ -66,11 +68,11 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ isOpen, onClose }) => 
         <div className="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar bg-zinc-950/50">
           {messages.map((msg, idx) => (
             <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div 
+              <div
                 className={`
                   max-w-[85%] p-3 rounded-lg text-sm leading-relaxed
-                  ${msg.role === 'user' 
-                    ? 'bg-brand-700 text-white rounded-tr-sm border border-brand-600' 
+                  ${msg.role === 'user'
+                    ? 'bg-brand-700 text-white rounded-tr-sm border border-brand-600'
                     : 'bg-zinc-800 text-zinc-200 rounded-tl-sm border border-zinc-700'}
                 `}
               >
@@ -101,7 +103,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = ({ isOpen, onClose }) => 
               placeholder="Digite sua dúvida..."
               className="flex-1 bg-transparent border-none outline-none text-sm text-white placeholder-zinc-500 font-light"
             />
-            <button 
+            <button
               onClick={handleSend}
               disabled={isLoading || !input.trim()}
               className="p-2 text-brand-500 hover:text-brand-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
